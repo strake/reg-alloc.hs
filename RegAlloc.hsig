@@ -1,0 +1,32 @@
+signature RegAlloc where
+
+-- | Transform a list of basic blocks, containing variable references, into an
+-- equivalent list where each reference has been associated with a register
+-- allocation. Artificial save and restore instructions may be inserted into
+-- those blocks to indicate spilling and reloading of variables.
+--
+-- In order to call this function, the caller must provide records that
+-- functionally characterize these blocks and their operations according to an
+-- abstract API. This is done so that any program graph conforming to the API
+-- may be used, and no particular representation is required.
+--
+-- A tuple is return where the first value is a textual dump that describes
+-- the complete allocation state. If this value is never forced, that data is
+-- not collected.
+--
+-- The second value is the resulting list of allocated blocks. If allocation
+-- is found to be impossible -- for example if there are not enough registers
+-- -- a 'Left' value is returned, with a list of strings describing the error
+-- and its possible context. This is usually when the textual dump should be
+-- provided, if one's user has selected verbose error output, for example.
+allocate :: (Functor m, Applicative m, Monad m)
+         => Int        -- ^ Maximum number of registers to use
+         -> BlockInfo m blk1 blk2 op1 op2
+                      -- ^ Characterization of blocks
+         -> OpInfo m op1 op2
+                      -- ^ Characterization of operations
+         -> UseVerifier
+                      -- ^ Whether to use the runtime verifier
+         -> [blk1]     -- ^ A topologically sorted list of blocks
+         -> m (String, Either [String] [blk2])
+                      -- ^ Status dump and allocated blocks, or error w/ context
