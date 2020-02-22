@@ -1,5 +1,7 @@
 signature RegAlloc where
 
+import RegAlloc.Types
+
 -- | Transform a list of basic blocks, containing variable references, into an
 -- equivalent list where each reference has been associated with a register
 -- allocation. Artificial save and restore instructions may be inserted into
