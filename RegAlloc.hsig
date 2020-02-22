@@ -1,3 +1,6 @@
+-- This module is based on the "linearscan" package by John Wiegley.
+-- It is meant to present a similar interface.
+-- http://github.com/jwiegley/linearscan
 signature RegAlloc where
 
 import RegAlloc.Types
